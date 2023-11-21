@@ -2,9 +2,8 @@ import board
 
 # basic LED settings
 LED_SIG_PIN = board.D18
-LED_NUMBER = 30
-BRIGHTNESS = 0.5
-LED_REFRESH_INTERVAL = 0.05
+LED_NUMBER = 27
+BRIGHTNESS = 0.8
 
 # LED colors
 PRELIMINARY_COLOR = (255, 0, 255)

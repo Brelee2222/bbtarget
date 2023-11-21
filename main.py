@@ -19,13 +19,11 @@ def on_message(event) :
     
 
 # init
-useWebSocket = consts.USE_WEBSOCKET
-
 socket = socketio.SimpleClient()
 
 # setup
-if useWebSocket : 
-    socket.connect(consts.WS_URL, headers={"robotId":id.getID()}) # run something from id.py to get id
+if consts.USE_WEBSOCKET : 
+    socket.connect(consts.WS_URL, headers={"robotId":id.getID()})
     print("connected websocket")
 
     threading.Thread(target=listen)
@@ -34,5 +32,3 @@ if useWebSocket :
 while True :
     led.ledControl.writePattern()
     led.ledControl.show()
-
-    time.sleep(consts.LED_REFRESH_INTERVAL)

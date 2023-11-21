@@ -1,11 +1,8 @@
-from typing import Callable
 import neopixel
-
-type Pattern = Callable[[list, int], list[int]]
 
 class LEDPattern :
 
-    def __init__(self, patterns: list[Pattern]) :
+    def __init__(self, patterns: list) :
         self.patterns = patterns
 
     def writePixels(self, pixels: neopixel.NeoPixel) :
@@ -15,8 +12,8 @@ class LEDPattern :
 
 class LEDControl(neopixel.NeoPixel) :
 
-    def __init__(self, sigPin, pixels: int, bpp: int, brightness: float) :
-        super().__init__(sigPin, pixels, bpp, brightness)
+    def __init__(self, pin, n: int, brightness: float) :
+        super().__init__(pin=pin, n=n, brightness=brightness, auto_write=False)
 
     def setPattern(self, pattern: LEDPattern) :
         self.__pattern = pattern
