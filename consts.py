@@ -17,5 +17,6 @@ EMPTY_BATTERY_COLOR = (255, 0, 0)
 
 # Websocket
 USE_WEBSOCKET = True
-WS_URL = "0.0.0.0"
+WS_URL = "http://127.0.0.1:3000"
+WS_KEY = "fowlfield"
 WS_TIMEOUT = 5000
