@@ -22,7 +22,6 @@ def on_message(event) :
     else:
         print("unknown event", event)
     
-    
 
 # init
 socket = socketio.SimpleClient()
@@ -38,3 +37,5 @@ if consts.USE_WEBSOCKET :
 while True :
     led.ledControl.writePattern()
     led.ledControl.show()
+    
+    time.sleep(consts.LED_INTERVAL_TIMEOUT)
