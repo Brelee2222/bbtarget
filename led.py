@@ -2,7 +2,7 @@ import consts
 import ledDriving
 import patterns
 
-CONSOLE_PATTERN = ledDriving.LEDPattern([])
+CONSOLE_PATTERN = patterns.Solid(consts.PRELIMINARY_COLOR)
 
 MATCH_PATTERNS = [
     patterns.Solid(0),
@@ -21,3 +21,4 @@ def changePattern(index) :
 
 # initialize
 ledControl = ledDriving.LEDControl(pin=consts.LED_SIG_PIN, n=consts.LED_NUMBER, brightness=consts.BRIGHTNESS, auto_write=False)
+ledControl.setPattern(CONSOLE_PATTERN)
