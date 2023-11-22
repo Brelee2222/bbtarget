@@ -9,3 +9,6 @@ def getNumberID() -> int :
 
 def isRed() -> bool :
     pass
+
+def changeID(id: int, red: bool) :
+    pass
