@@ -2,9 +2,7 @@ import consts
 import ledDriving
 import patterns
 
-# LEDs may also be used to display console later on
-
-ERROR_PATTERN = patterns.Solid(consts.ERROR_COLOR)
+CONSOLE_PATTERN = patterns.Console()
 
 MATCH_PATTERNS = [
     patterns.Solid(0),
@@ -18,8 +16,10 @@ MATCH_PATTERNS = [
     patterns.FinalsWin(False),
 ]
 
-def displayError() :
-    ledControl.setPattern
+def displayLog(statusColor: int) :
+    CONSOLE_PATTERN.setMessage(statusColor=statusColor)
+
+    ledControl.setPattern(CONSOLE_PATTERN)
 
 def changePattern(index) :
     ledControl.setPattern(MATCH_PATTERNS[index])

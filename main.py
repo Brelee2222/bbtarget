@@ -1,6 +1,5 @@
 import consts
 import socketio
-from socketio import exceptions as socketioExeptions
 import threading
 import led
 import time
@@ -27,6 +26,11 @@ def on_message(event) :
     else :
         print("unknown event", event)
     
+def onError(e: Exception) :
+    if socket.connected :
+        socket.emit("robotTargetError", str(e))
+    else :
+        led.displayLog(consts.ERROR_COLOR)
 
 # init
 socket = socketio.SimpleClient()
