@@ -1,34 +1,35 @@
+from __future__ import annotations
 import microcontroller
-from abc import abstractmethod
 import neopixel
+from abc import abstractmethod
 
 class LEDPattern :
 
     # Sets the initial pixels of the pattern
     @abstractmethod
-    def transition(self, pixels: neopixel.NeoPixel) -> None:
+    def transition(self, pixels: LEDControl) -> None:
         pass
 
-    # Returns the range of leds that should be updated
     @abstractmethod
-    def range(self) -> range: # list[[start, stop step]]
-        return range(0)
-
-    # Gets the pixel of the given index
-    @abstractmethod
-    def getPixel(self, index: int) -> int :
+    def update(self, pixels: LEDControl) -> None:
         pass
 
 class loopbytearray(bytearray) :
 
-    def __init__(self) :
-        self.__offset = 0 # I have an obsession with private variables
+    def __init__(self, buffer: bytearray) :
+        super().__init__(buffer)
+
+        self.setSize(len(buffer))
+        self.setOffset(0) # I have an obsession with private variables
+
+    def setSize(self, size) :
+        self.__size = size
 
     def setOffset(self, offset) :
         self.__offset = offset
 
     def __getitem__(self, __key) -> int :
-        return super().__getitem__((__key + self.__offset) % len(self))
+        return super().__getitem__((__key + self.__offset) % self.__size)
 
 class LEDControl(neopixel.NeoPixel) :
 
@@ -44,6 +45,11 @@ class LEDControl(neopixel.NeoPixel) :
         super().__init__(pin=pin, n=n, bpp=bpp,brightness=brightness,auto_write=auto_write,pixel_order=pixel_order)
         self._post_brightness_buffer = loopbytearray(self._post_brightness_buffer)
 
+    def setLoopBufferSize(self, size) :
+        self._post_brightness_buffer.setSize(size)
+
+    def setLoopBufferOffset(self, offset) :
+        self._post_brightness_buffer.setOffset(offset)
 
     def clear(self) :
         self.fill(0)
@@ -52,7 +58,5 @@ class LEDControl(neopixel.NeoPixel) :
         self.__pattern = pattern
         pattern.transition(self)
 
-    def writePattern(self) :
-        for index in self.__pattern.range(self.n) :
-            r, g, b, w = self._parse_color(self.__pattern.getPixel(index))
-            self._set_item(index, r, g, b, w)
+    def updatePattern(self) :
+        self.__pattern.update(self)

@@ -6,8 +6,11 @@ import time
 
 allianceColor = consts.RED_ALLIANCE_COLOR if id.isRed() else consts.BLUE_ALLIANCE_COLOR
 
-class Console(LEDPattern) :
+class Console(LEDPattern) : # might not work due--
     def transition(self, pixels):
+        pixels.setLoopBufferOffset(0)
+        pixels.setLoopBufferSize(pixels.n)
+
         half = math.floor(pixels.n/2)
 
         for index in range(half) :
@@ -27,12 +30,12 @@ class Solid(LEDPattern) :
         self.__color = color
 
     def transition(self, pixels):
-        pixels.fill(self.__color)
-    
-    def range(self, n: int) :
-        return range(0)
+        pixels.setLoopBufferOffset(0)
+        pixels.setLoopBufferSize(1)
 
-class FinalsWin(LEDPattern) :
+        pixels[0] = self.__color
+
+class FinalsWin(LEDPattern) : # not done yet
     __blinkSpeed = 0.5
 
     def __init__(self, redWin) :
@@ -61,33 +64,33 @@ class AllianceWin(LEDPattern) :
             # self.__loseColor = consts.RED_ALLIANCE_COLOR
 
     def transition(self, pixels):
-        pixels.fill(self.__winColor)
+        pixels.setLoopBufferOffset(0)
+        pixels.setLoopBufferSize(2)
 
-    def range(self, n: int) :
-        return range(0, n, 2)
+        pixels.clear() # clearing is not necessary
+
+        pixels[1] = self.__winColor
     
-    def getPixel(self, index) :
-        return self.__winColor if time.time() / self.__blinkSpeed % 2 > 1 else 0x646464
+    def update(self, pixels) :
+        pixels[0] = self.__winColor if time.time() / self.__blinkSpeed % 2 > 1 else 0x646464
 
 class AllianceStation(LEDPattern) :
 
     __ledSpeed = 15
 
     def __init__(self) :
-        self.__lastLedIndex = 0
         self.__stationID = id.getNumberID()
 
     def transition(self, pixels) -> None:
-        pixels.fill(0)
+        pixels.setLoopBufferSize(pixels.n)
 
-    def range(self, n) :
-        lastLEDIndex = self.__lastLedIndex
-        self.__lastLedIndex = (math.floor(time.time() * self.__ledSpeed) % n) - n
-        return range(lastLEDIndex, self.__lastLedIndex + self.__stationID + 1)
+        pixels.clear()
 
-    def getPixel(self, index) :
-        index -= self.__lastLedIndex
-        return allianceColor if 0 < index and index <= self.__stationID else 0
+        for index in range(self.__stationID) :
+            pixels[index] = allianceColor
+
+    def update(self, pixels) :
+        pixels.setLoopBufferOffset(math.floor(time.time() * self.__ledSpeed % pixels.n))
 
 class HitPattern(LEDPattern) :
 
@@ -95,10 +98,9 @@ class HitPattern(LEDPattern) :
         self.__skips = 1 << timesHit
 
     def transition(self, pixels):
-        pixels.fill(0)
+        pixels.setLoopBufferOffset(0)
+        pixels.setLoopBufferSize(self.__skips)
 
-    def range(self, n: int):
-        return range(0, n, self.__skips)
+        pixels.clear()
 
-    def getPixel(self, index) :
-        return allianceColor
+        pixels[0] = allianceColor

@@ -3,7 +3,7 @@ import board
 # basic LED settings
 LED_SIG_PIN = board.D18
 LED_NUMBER = 27
-LED_INTERVAL_TIMEOUT = 0.05
+LED_INTERVAL_TIMEOUT = 0.07
 BRIGHTNESS = 0.8
 
 # LED colors
