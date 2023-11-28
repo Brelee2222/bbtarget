@@ -71,7 +71,7 @@ class AllianceWin(LEDPattern) :
 
 class AllianceStation(LEDPattern) :
 
-    __ledSpeed = 5
+    __ledSpeed = 15
 
     def __init__(self) :
         self.__lastLedIndex = 0
@@ -83,11 +83,11 @@ class AllianceStation(LEDPattern) :
     def range(self, n) :
         lastLEDIndex = self.__lastLedIndex
         self.__lastLedIndex = (math.floor(time.time() * self.__ledSpeed) % n) - n
-        return range(lastLEDIndex, self.__lastLedIndex + self.__stationID)
+        return range(lastLEDIndex, self.__lastLedIndex + self.__stationID + 1)
 
     def getPixel(self, index) :
         index -= self.__lastLedIndex
-        return allianceColor if 0 < index and index >= self.__stationID else 0
+        return allianceColor if 0 < index and index <= self.__stationID else 0
 
 class HitPattern(LEDPattern) :
 

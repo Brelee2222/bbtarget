@@ -29,4 +29,7 @@ def changeBrightness(brightness: int) :
 
 # initialize
 ledControl = ledDriving.LEDControl(pin=consts.LED_SIG_PIN, n=consts.LED_NUMBER, brightness=consts.BRIGHTNESS, auto_write=False)
-ledControl.setPattern(patterns.Solid(consts.PRELIMINARY_COLOR))
+if consts.USE_WEBSOCKET :
+    ledControl.setPattern(patterns.Solid(consts.PRELIMINARY_COLOR))
+else :
+    changePattern(4)

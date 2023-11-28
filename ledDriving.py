@@ -1,3 +1,4 @@
+import microcontroller
 from abc import abstractmethod
 import neopixel
 
@@ -18,7 +19,32 @@ class LEDPattern :
     def getPixel(self, index: int) -> int :
         pass
 
+class loopbytearray(bytearray) :
+
+    def __init__(self) :
+        self.__offset = 0 # I have an obsession with private variables
+
+    def setOffset(self, offset) :
+        self.__offset = offset
+
+    def __getitem__(self, __key) -> int :
+        return super().__getitem__((__key + self.__offset) % len(self))
+
 class LEDControl(neopixel.NeoPixel) :
+
+    def __init__(self, 
+        pin: microcontroller.Pin,
+        n: int,
+        *,
+        bpp: int = 3,
+        brightness: float = 1,
+        auto_write: bool = True,
+        pixel_order: str = None
+    ) :
+        super().__init__(pin=pin, n=n, bpp=bpp,brightness=brightness,auto_write=auto_write,pixel_order=pixel_order)
+        self._post_brightness_buffer = loopbytearray(self._post_brightness_buffer)
+
+
     def clear(self) :
         self.fill(0)
 
@@ -27,6 +53,6 @@ class LEDControl(neopixel.NeoPixel) :
         pattern.transition(self)
 
     def writePattern(self) :
-        for index in self.__pattern.range() :
+        for index in self.__pattern.range(self.n) :
             r, g, b, w = self._parse_color(self.__pattern.getPixel(index))
             self._set_item(index, r, g, b, w)
