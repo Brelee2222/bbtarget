@@ -50,5 +50,6 @@ if consts.USE_WEBSOCKET :
 while True :
     led.ledControl.updatePattern()
     led.ledControl.show()
+
     
     time.sleep(consts.LED_INTERVAL_TIMEOUT)

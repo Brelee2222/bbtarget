@@ -37,6 +37,7 @@ class Solid(LEDPattern) :
 
 class FinalsWin(LEDPattern) : # not done yet
     __blinkSpeed = 0.5
+    __ledSpeed = 50
 
     def __init__(self, redWin) :
         if redWin :
@@ -46,11 +47,30 @@ class FinalsWin(LEDPattern) : # not done yet
             self.__winColor = consts.BLUE_ALLIANCE_COLOR
             # self.__loseColor = consts.RED_ALLIANCE_COLOR
 
-    def range(self, n: int) :
-        return range(n)
+    def transition(self, pixels):
+
+
+        rainbowColors = consts.RAINBOW_COLORS
+        rainbowColorsLength = len(rainbowColors)
+
+        n = pixels.n
+
+        prevColor = rainbowColors[rainbowColorsLength-1]
+
+        for c in range(rainbowColorsLength) :
+            nextColor = rainbowColors[c]
+
+            start = math.floor(n * c / rainbowColorsLength)
+            end = math.floor(n * (c + 1) / rainbowColorsLength)
+
+            for pixelIndex in range(start, end) :
+                pixels[pixelIndex] = (prevColor * (end - pixelIndex) + nextColor * (pixelIndex - start)) / (end - start)
+
     
-    def getPixel(self, index) :
-        return self.__winColor if index & 0b1 and (time.time() / self.__blinkSpeed % 2) > 1 else 0x646464
+    def update(self, pixels) :
+        pixels[0] = self.__winColor if time.time() / self.__blinkSpeed % 2 > 1 else 0x646464
+
+
 
 class AllianceWin(LEDPattern) :
     __blinkSpeed = 0.5
@@ -72,7 +92,7 @@ class AllianceWin(LEDPattern) :
         pixels[1] = self.__winColor
     
     def update(self, pixels) :
-        pixels[0] = self.__winColor if time.time() / self.__blinkSpeed % 2 > 1 else 0x646464
+        pixels[0] = self.__winColor if time.time() / self.__blinkSpeed & 0b1 else 0x646464
 
 class AllianceStation(LEDPattern) :
 
@@ -98,9 +118,12 @@ class HitPattern(LEDPattern) :
         self.__skips = 1 << timesHit
 
     def transition(self, pixels):
+
         pixels.setLoopBufferOffset(0)
         pixels.setLoopBufferSize(self.__skips)
 
         pixels.clear()
 
         pixels[0] = allianceColor
+
+        print(pixels._post_brightness_buffer)
