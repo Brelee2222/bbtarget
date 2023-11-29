@@ -28,6 +28,9 @@ class loopbytearray(bytearray) :
     def setOffset(self, offset) :
         self.__offset = offset
 
+    def __getitem__(self, __key) -> int :
+        return super().__getitem__((__key + self.__offset) % self.__size)
+
 class LEDControl(neopixel.NeoPixel) :
 
     def __init__(self, 
@@ -43,10 +46,10 @@ class LEDControl(neopixel.NeoPixel) :
         self._post_brightness_buffer = loopbytearray(self._post_brightness_buffer)
 
     def setLoopBufferSize(self, size) :
-        self._post_brightness_buffer.setSize(size)
+        self._post_brightness_buffer.setSize(size * self.bpp)
 
     def setLoopBufferOffset(self, offset) :
-        self._post_brightness_buffer.setOffset(offset)
+        self._post_brightness_buffer.setOffset(offset * self.bpp)
 
     def clear(self) :
         self.fill(0)
