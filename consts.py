@@ -23,7 +23,7 @@ RAINBOW_COLORS = [
     0xFF0000,
     0xFFFF00,
     0x00FF00,
-    0x00FFFF
+    0x00FFFF,
     0x0000FF,
     0xFF00FF
 ]
