@@ -47,6 +47,9 @@ class FinalsWin(LEDPattern) : # not done yet
             self.__winColor = consts.BLUE_ALLIANCE_COLOR
             # self.__loseColor = consts.RED_ALLIANCE_COLOR
 
+    def toRGB(self, hex) :
+        return [hex >> 16, (hex >> 8) & 0xff, hex & 0xff]
+
     def transition(self, pixels):
 
 
@@ -55,23 +58,27 @@ class FinalsWin(LEDPattern) : # not done yet
 
         n = pixels.n
 
-        prevColor = rainbowColors[rainbowColorsLength-1]
+        prevColor = self.toRGB(rainbowColors[rainbowColorsLength-1])
 
         for c in range(rainbowColorsLength) :
-            nextColor = rainbowColors[c]
+            nextColor = self.toRGB(rainbowColors[(c+1) % rainbowColorsLength])
 
             start = math.floor(n * c / rainbowColorsLength)
             end = math.floor(n * (c + 1) / rainbowColorsLength)
 
             for pixelIndex in range(start, end) :
-                pixels[pixelIndex] = (prevColor * (end - pixelIndex) + nextColor * (pixelIndex - start)) / (end - start)
+                progress = (pixelIndex - start) / (end - start)
+                pixels[pixelIndex%pixels.n] = (math.floor(nextColor[0] * progress + prevColor[0] * (1 - progress)), math.floor(nextColor[1] * progress + prevColor[1] * (1 - progress)), math.floor(nextColor[2] * progress + prevColor[2] * (1 - progress)))
+            
+            prevColor = nextColor
 
     
     def update(self, pixels) :
-        pixels[0] = self.__winColor if time.time() / self.__blinkSpeed % 2 > 1 else 0x646464
+        # pixels[0] = self.__winColor if time.time() / self.__blinkSpeed % 2 > 1 else 0x646464
+        pixels.setLoopBufferOffset(math.floor(time.time() * self.__ledSpeed % pixels.n))
 
 class AllianceWin(LEDPattern) :
-    __blinkSpeed = 0.5
+    __blinkSpeed = 2
 
     def __init__(self, redWin) :
         if redWin :
