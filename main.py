@@ -8,7 +8,10 @@ import id
 def listenConsole() :
     print("listening to console")
     while True :
-        led.changePattern(int(input()))
+        message = input()
+        if message == "close" :
+            return
+        led.changePattern(int(message))
 
 def listen() :
     print("starting listener")
@@ -20,10 +23,11 @@ def listen() :
             print(e)
 
 def on_message(event) :
+    print("message")
     if event[0] == "setBucketState":
         pattern = event[1]
         print("setting pattern", pattern)
-        led.changePattern(event[1])
+        led.changePattern(pattern)
     elif event[0] == "changeBrightness":
         led.changeBrightness(event[1])
     elif event[0] == "changeID":

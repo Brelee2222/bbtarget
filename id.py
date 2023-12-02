@@ -1,3 +1,4 @@
+import sys
 # import RPi.GPIO as GPIO
 # import consts
 # Should return R1, R2, R3, B1, B2, or B3 for FMS
@@ -28,8 +29,12 @@ def isRed() -> bool :
 def changeID(id: int, red: bool) :
     pass
 
-numberID = (not getPlus1()) + ((not getPlus2()) << 1)
-redBlue = not getRedBlue()
+try :
+    numberID = int(sys.argv[1])
+    redBlue = bool(sys.argv[2])
+except :
+    numberID = (not getPlus1()) + ((not getPlus2()) << 1)
+    redBlue = not getRedBlue()
 
 print(numberID)
 print(redBlue)
