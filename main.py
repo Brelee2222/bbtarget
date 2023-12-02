@@ -5,6 +5,11 @@ import led
 import time
 import id
 
+def listenConsole() :
+    print("listening to console")
+    while True :
+        led.changePattern(int(input()))
+
 def listen() :
     print("starting listener")
     while True :
@@ -40,11 +45,13 @@ if consts.USE_WEBSOCKET :
     try :
         socket.connect(consts.WS_URL, auth={"role": "robot","key": consts.WS_KEY,"robot_id":id.getID()})
         print("connected websocket")
+        threading.Thread(target=listen).start()
     except socketio.exceptions.ConnectionError as e :
         print(e)
-        led.displayError()
-    finally : 
-        threading.Thread(target=listen).start()
+        led.displayLog(consts.ERROR_COLOR)
+
+if consts.USE_CONSOLE_INPUT :
+    threading.Thread(target=listenConsole).start()
 
 # loop
 while True :

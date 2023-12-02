@@ -1,5 +1,7 @@
 import board
 
+USE_CONSOLE_INPUT = False
+
 # ID pins
 ID_PLUS_1_PIN = 10
 ID_PLUS_2_PIN = 9
@@ -8,7 +10,7 @@ ID_RED_BLUE_PIN = 8
 # basic LED settings
 LED_SIG_PIN = board.D18
 LED_NUMBER = 27
-LED_INTERVAL_TIMEOUT = 0.07
+LED_INTERVAL_TIMEOUT = 0.01
 BRIGHTNESS = 0.8
 
 # LED colors
@@ -20,12 +22,12 @@ RED_ALLIANCE_COLOR = 0xFF0000
 BLUE_ALLIANCE_COLOR = 0x0000FF
 
 RAINBOW_COLORS = [
-    0xFF0000,
-    0xFFFF00,
-    0x00FF00,
-    0x00FFFF,
-    0x0000FF,
-    0xFF00FF
+    0xAA0000,
+    0xAAAA00,
+    0x00AA00,
+    0x00AAAA,
+    0x0000AA,
+    0xAA00AA
 ]
 
 # Websocket

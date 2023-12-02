@@ -36,10 +36,15 @@ class Solid(LEDPattern) :
         pixels[0] = self.__color
 
 class FinalsWin(LEDPattern) : # not done yet
-    __ledSpeed = 50
+    __ledSpeed = 15
 
     def __init__(self, redWin) :
-        pass
+        if redWin :
+            self.__winColor = consts.RED_ALLIANCE_COLOR
+            # self.__loseColor = consts.BLUE_ALLIANCE_COLOR
+        else :
+            self.__winColor = consts.BLUE_ALLIANCE_COLOR
+            # self.__loseColor = consts.RED_ALLIANCE_COLOR
 
     def toRGB(self, hex) :
         return [hex >> 16, (hex >> 8) & 0xff, hex & 0xff]
@@ -58,12 +63,13 @@ class FinalsWin(LEDPattern) : # not done yet
         for c in range(rainbowColorsLength+1) :
             nextColor = self.toRGB(rainbowColors[(c+1) % rainbowColorsLength])
 
-            start = math.floor(n * c / rainbowColorsLength)
-            end = math.floor(n * (c + 1) / rainbowColorsLength)
+            start = math.floor(n * c / (rainbowColorsLength))
+            end = math.floor(n * (c + 1) / (rainbowColorsLength))
 
             for pixelIndex in range(start, end) :
                 progress = (pixelIndex - start) / (end - start)
-                pixels[pixelIndex%pixels.n] = (
+                pixels[pixelIndex%pixels.n] = self.__winColor if not (pixelIndex % 3) else (
+                # pixels[pixelIndex%pixels.n] = (
                     self.transitionColor(prevColor, nextColor, progress, 0), 
                     self.transitionColor(prevColor, nextColor, progress, 1), 
                     self.transitionColor(prevColor, nextColor, progress, 2)
@@ -74,10 +80,10 @@ class FinalsWin(LEDPattern) : # not done yet
     
     def update(self, pixels) :
         # pixels[0] = self.__winColor if time.time() / self.__blinkSpeed % 2 > 1 else 0x646464
-        pixels.setLoopBufferOffset(math.floor(time.time() * self.__ledSpeed % pixels.n) * 2)
+        pixels.setLoopBufferOffset(math.floor(time.time() * self.__ledSpeed % pixels.n) * 3)
 
 class AllianceWin(LEDPattern) :
-    __blinkSpeed = 2
+    __blinkSpeed = 3
 
     def __init__(self, redWin) :
         if redWin :
@@ -96,7 +102,7 @@ class AllianceWin(LEDPattern) :
         pixels[1] = self.__winColor
     
     def update(self, pixels) :
-        pixels[0] = self.__winColor if time.time() / self.__blinkSpeed % 2 > 1 else 0x646464
+        pixels[0] = self.__winColor if time.time() * self.__blinkSpeed % 2 > 1 else 0x646464
 
 class AllianceStation(LEDPattern) :
 
@@ -106,7 +112,7 @@ class AllianceStation(LEDPattern) :
         self.__stationID = id.getNumberID()
 
     def transition(self, pixels) -> None:
-        pixels.setLoopBufferSize(self.__stationID + 3)
+        pixels.setLoopBufferSize(5)
         pixels.setLoopBufferOffset(0)
 
         pixels.clear()

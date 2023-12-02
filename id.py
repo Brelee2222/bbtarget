@@ -17,7 +17,7 @@ def getRedBlue() :
     pass
 
 def getID() -> str :
-    return ("R" if isRed() else "B") + numberID
+    return ("R" if isRed() else "B") + str(numberID)
 
 def getNumberID() -> int :
     return numberID
