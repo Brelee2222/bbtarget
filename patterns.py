@@ -53,6 +53,8 @@ class FinalsWin(LEDPattern) : # not done yet
         return math.floor(next[index] * progress + prev[index] * (1 - progress))
 
     def transition(self, pixels):
+        pixels.setLoopBufferSize(pixels.n)
+
         rainbowColors = consts.RAINBOW_COLORS
         rainbowColorsLength = len(rainbowColors)
 
@@ -102,7 +104,7 @@ class AllianceWin(LEDPattern) :
         pixels[1] = self.__winColor
     
     def update(self, pixels) :
-        pixels[0] = self.__winColor if time.time() * self.__blinkSpeed % 2 > 1 else 0x646464
+        pixels[0] = self.__winColor if time.time() * self.__blinkSpeed % 2 > 1 else 0x333333
 
 class AllianceStation(LEDPattern) :
 
