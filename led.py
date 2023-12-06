@@ -14,6 +14,7 @@ MATCH_PATTERNS = [
     patterns.AllianceWin(False),
     patterns.FinalsWin(True),
     patterns.FinalsWin(False),
+    patterns.Solid(consts.TEST_COLOR)
 ]
 
 def displayLog(statusColor: int) :
